@@ -73,15 +73,15 @@ streamlit run app.py
 
 ##### Apriori
 [2-3 sentences on your implementation approach]
-- Data structure: [e.g., dictionary of itemsets]
-- Candidate generation: [breadth-first, level-wise]
-- Pruning strategy: [minimum support]
+- Data structure: Horizontal data format
+- Candidate generation: BFS
+- Pruning strategy: support based
 
 ##### Eclat
 [2-3 sentences on your implementation approach]
-- Data structure: [e.g., TID-set representation]
-- Search strategy: [depth-first]
-- Intersection method: [set operations]
+- Data structure: TID-list
+- Search strategy: Depth-first
+- Intersection method: TID-list intersection
 
 ##### CLOSET
 [2-3 sentences on your implementation approach]
@@ -152,23 +152,16 @@ Verified functionality:
 Test cases:
 - [Describe 2-3 key test scenarios]
 
-
-
 #### Known Limitations
 
 - Memory usage not measured
+- High memory usage in ACLAT due to TID-list, the deeper the mining the more likely it is to run into memory issues. 
 - Very large datasets (10k+ transactions) may slow down Apriori significantly
-
-
 
 #### AI Tool Usage
 
 [Required: 1 paragraph describing which AI tools you used and for what purpose]
-
-Example:
-"Used ChatGPT for explaining Eclat algorithm vertical representation and debugging file parsing errors. Used GitHub Copilot for generating UI boilerplate code. All generated code was reviewed, tested, and adapted for this specific implementation."
-
-
+Used ChatGPT to further clarify which algorithms would be better for product/transactions files and also to recommend frameworks which convinced us of using Streamlit. Also used to understand and work around certain limitations of each algorithm.
 
 #### References
 
