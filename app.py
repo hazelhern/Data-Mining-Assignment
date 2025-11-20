@@ -118,7 +118,7 @@ if "cleaned" in st.session_state and len(st.session_state["cleaned"]) > 0:
     )
 
     min_sup = st.slider("Minimum Support (%)", 1, 50, 20) / 100
-    min_conf = st.slider("Minimum Confidence (%)", 10, 90, 20) / 100
+    min_conf = st.slider("Minimum Confidence (%)", 10, 90, 50) / 100
 
     if st.button("Run Algorithm"):
         clean_tx = st.session_state["cleaned"]
@@ -157,36 +157,46 @@ if "rules" in st.session_state:
     rules = st.session_state["rules"]
 
     # Find rules where antecedent is the chosen item
-    matching_rules = [r for r in rules if r["antecedent"] == {chosen}]
+    matching_rules = []
+    for rule in rules:
+        antecedent = rule["antecedent"]
+        if len(antecedent) == 1 and chosen in antecedent:
+            matching_rules.append(rule)
 
-    # Deduplicate by highest confidence
+    # Pick highest confidence rule per recommended item
     best_rules = {}
     for r in matching_rules:
-        con = list(r["consequent"])[0]
-        if con not in best_rules or r["confidence"] > best_rules[con]["confidence"]:
-            best_rules[con] = r
+        consequent_item = list(r["consequent"])[0]
+        conf = r["confidence"]
 
-    final_recs = list(best_rules.values())
+        if consequent_item not in best_rules or conf > best_rules[consequent_item]["confidence"]:
+            best_rules[consequent_item] = r
 
-    if final_recs:
+    final_recommendations = list(best_rules.values())
+
+    if final_recommendations:
         st.write(f"### Customers who bought **{chosen}** also bought:")
-        for r in final_recs:
-            conf_pct = int(r["confidence"] * 100)
-            con = list(r["consequent"])[0]
-            st.write(f"- **{con}** — {conf_pct}% confidence")
-    else:
-        st.info("No recommendations found.")
 
+        for r in final_recommendations:
+            item = list(r["consequent"])[0]
+            conf_pct = int(r["confidence"] * 100)
+            st.write(f"- **{item}** — {conf_pct}% confidence")
+    else:
+        st.info("No recommendations found for this product using the selected algorithm.")
+
+    # Business Insights
     st.write("### Business Insights")
-    if final_recs:
-        top = final_recs[0]
-        con = list(top["consequent"])[0]
+    if final_recommendations:
+        top = final_recommendations[0]
+        item = list(top["consequent"])[0]
         conf_pct = int(top["confidence"] * 100)
+
         st.success(
-            f"**Business Strategy Suggestion:**\n\n"
-            f"Place **{chosen.capitalize()}** close to **{con.capitalize()}** in the store.\n"
-            f"This combination appears in {conf_pct}% of relevant transactions, indicating a strong "
-            f"association and an opportunity for cross-selling."
+            f"Place **{chosen.capitalize()}** near **{item.capitalize()}** on shelves.\n\n"
+            f"This association appears in **{conf_pct}%** of matching transactions, indicating "
+            f"a strong cross-selling opportunity."
         )
     else:
-        st.info("No strong insights available.")
+        st.info("No strong business insights available.")
+else:
+    st.warning("Run an association rule algorithm first!")
