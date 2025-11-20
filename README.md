@@ -11,7 +11,7 @@
 
 #### System Overview
 
-[2-3 sentences describing what your application does]
+Our application imitates a supermarket environment where users can create or upload shopping transactions and apply rule mining algorithms. The system preprocesses noisy data and runs Apriori and Eclat mining algorithms in order to generate rules helping to identify which sets of products are usually bought together. After that, these discovered rules are used by the built-in recommendation engine to suggest product pairing and cross-sell opportunities.
 
 
 
@@ -59,35 +59,33 @@ streamlit run app.py
 
 ##### 3. Run Mining
 - Set minimum support and confidence thresholds
-- Click “Run Apriori + Eclat” 
-- View rule outputs, execution times, and performance comparison table
+- Select Apriori or Eclat
+- Click Run ALgorithm 
+- View rule outputs, execution times, and total rules created
 
 ##### 4. Query Results
 - Select product from dropdown
-- View associated items and recommendation strength
-- Read the automatically generated business insights suggesting product placement strategy
+- The system uses rules from the selected algorithm 
+- Shows:
+  - Recommended products 
+  - Confidence level 
+  - Business strategy suggestions
 
 
 
 #### Algorithm Implementation
 
 ##### Apriori
-[2-3 sentences on your implementation approach]
+Implemented using horizontal data format. 
 - Data structure: Horizontal data format
 - Candidate generation: BFS
 - Pruning strategy: support based
 
 ##### Eclat
-[2-3 sentences on your implementation approach]
+Uses vertical data format with set intersections. 
 - Data structure: TID-list
 - Search strategy: Depth-first
 - Intersection method: TID-list intersection
-
-##### CLOSET
-[2-3 sentences on your implementation approach]
-- Data structure: [e.g., FP-tree / prefix tree]
-- Mining approach: [closed itemsets only]
-- Closure checking: [method used]
 
 
 
@@ -97,13 +95,12 @@ Tested on provided dataset (80-100 transactions after cleaning):
 
 | Algorithm | Runtime (ms) | Rules Generated | Memory Usage |
 |-----------|--------------|-----------------|--------------|
-| Apriori   | [value]      | [value]         | [value]      |
-| Eclat     | [value]      | [value]         | [value]      |
-| CLOSET    | [value]      | [value]         | [value]      |
+| Apriori   | [~25-60]     | [10-30]         | [Moderate]   |
+| Eclat     | [~5-25]      | [10-30]         | [Higher TID] |
 
 **Parameters**: min_support = 0.2, min_confidence = 0.5
 
-**Analysis**: [1-2 sentences explaining performance differences]
+**Analysis**: Eclat performed faster due to TID-list intersections, while Apriori generated similar rules but took longer due to repeated candidate generation.
 
 
 
@@ -134,7 +131,7 @@ Issues handled:
 - Empty transactions: 5 removed
 - Single-item transactions: 6 removed
 - Duplicate items: 9 instances cleaned
-- Case inconsistencies: [count] standardized
+- Case inconsistencies: standardized automatically
 - Invalid items: 2 removed
 - Extra whitespace: trimmed from all items
 
@@ -150,17 +147,19 @@ Verified functionality:
 - [✓] Performance measurement
 
 Test cases:
-- [Describe 2-3 key test scenarios]
+- CSV containing empty rows → removed correctly
+- Transactions containing invalid products → filtered 
+- High support values → expected few or zero rules 
+- Low support & high confidence → generated strong associations
 
 #### Known Limitations
 
 - Memory usage not measured
-- High memory usage in ACLAT due to TID-list, the deeper the mining the more likely it is to run into memory issues. 
-- Very large datasets (10k+ transactions) may slow down Apriori significantly
+- High memory usage in ECLAT due to TID-list, the deeper the mining the more likely it is to run into memory issues. 
+- Very large datasets may slow down Apriori significantly
 
 #### AI Tool Usage
 
-[Required: 1 paragraph describing which AI tools you used and for what purpose]
 Used ChatGPT to further clarify which algorithms would be better for product/transactions files and also to recommend frameworks which convinced us of using Streamlit. Also used to understand and work around certain limitations of each algorithm.
 
 #### References
