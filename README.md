@@ -162,6 +162,9 @@ Test cases:
 
 Used ChatGPT to further clarify which algorithms would be better for product/transactions files and also to recommend frameworks which convinced us of using Streamlit. Also used to understand and work around certain limitations of each algorithm.
 
+#### Live Demo
+https://data-mining-assignment-ec55ba5tkfhm2tamuwwulj.streamlit.app/
+
 #### References
 
 - Course lecture materials
